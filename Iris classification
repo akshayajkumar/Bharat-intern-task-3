@@ -1,0 +1,46 @@
+# Import necessary libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+# Load the Iris dataset
+iris = datasets.load_iris()
+data = pd.DataFrame(data=np.c_[iris['data'], iris['target']], columns=iris['feature_names'] + ['target'])
+
+# Select features (sepal length, sepal width, petal length, and petal width)
+X = data[['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']]
+y = data['target']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a K-Nearest Neighbors (K-NN) classifier
+knn = KNeighborsClassifier(n_neighbors=3)  # You can adjust the number of neighbors
+
+# Fit the model to the training data
+knn.fit(X_train, y_train)
+
+# Make predictions on the test data
+y_pred = knn.predict(X_test)
+
+# Calculate the accuracy of the model
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# Create scatter plots for petal length vs. petal width and sepal length vs. sepal width
+plt.figure(figsize=(12, 4))
+plt.subplot(121)
+plt.scatter(X['petal length (cm)'], X['petal width (cm)'], c=y, cmap='viridis')
+plt.xlabel('Petal Length (cm)')
+plt.ylabel('Petal Width (cm)')
+plt.title('Petal Length vs. Petal Width')
+plt.subplot(122)
+plt.scatter(X['sepal length (cm)'], X['sepal width (cm)'], c=y, cmap='viridis')
+plt.xlabel('Sepal Length (cm)')
+plt.ylabel('Sepal Width (cm)')
+plt.title('Sepal Length vs. Sepal Width')
+plt.show()
